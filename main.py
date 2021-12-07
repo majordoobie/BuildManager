@@ -6,27 +6,6 @@ from pathlib import Path
 from components.project_manager import Manager
 
 
-def _make_defaults(db: Path, project_path: str, project_name: str) -> None:
-    """
-    Create the default build json
-    {
-        "project_path": "path_to_project",
-        "project_name": "project_name"
-
-    }
-    :param path:
-    :return:
-    """
-    _dict = {
-        "project_path": project_path,
-        "project_name": project_name
-    }
-    print(_dict)
-
-    with db.open("wt", encoding="utf-8") as outfile:
-        json.dump(_dict, outfile)
-
-
 def _get_db(project_db: Path) -> dict:
     with project_db.open(encoding="utf-8") as outfile:
         return json.load(outfile)
@@ -49,9 +28,7 @@ def main():
         mgr = Manager.load_manager(project_db)
 
     print(mgr)
-
-
-
+    mgr.run(args.project_name)
 
 
 if __name__ == '__main__':

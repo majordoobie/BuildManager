@@ -8,19 +8,57 @@ GIT_IGNORE_FILES = (
     ".idea/",
 )
 
+
 class Manager:
     MANAGER_DB = ".make_build_system"
+    CMAKE_FILE_NAME = "CMakeLists.txt"
+    CMAKE_DEFAULT = "3.20"
+    C_STANDARD = "99"
 
-    def __init__(self, project_path: Path, project_name: str):
+    def __init__(
+            self,
+            project_path: Path,
+            project_name: str,
+            make_version: str = CMAKE_DEFAULT,
+            c_standard: str = C_STANDARD
+    ):
         self._project_path = project_path
         self._project_name = project_name
         self._project_db = project_path / Manager.MANAGER_DB
+
+        # Compiler defaults
+        self._make_version = make_version
+        self._c_standard = c_standard
+
+        # Create the git ignore
         self._modify_git_ignore()
 
+        # Instance constants
+        self._main_cmake = self._project_path / Manager.CMAKE_FILE_NAME
+
+        # List of files
+        self._project_files = []
+
     def __str__(self):
-        return f"{self._project_path}: {self._project_name}"
+        return f"Project path:  {self._project_path}\n" \
+               f"Project name:  {self._project_name}\n" \
+               f"CMake Version: {self._make_version}\n" \
+               f"C Standard:    {self._c_standard}\n" \
+
+
+    def _refactor(self, project_name: str) -> None:
+        pass
+
+    def run(self, project_name: str = None) -> None:
+        # If a new project name is specified then refactor
+        if project_name != self._project_name:
+            self._refactor(project_name)
+
+        # if not self._main_cmake.exists():
+        #     self._make_cmake_file()
 
     def save_manger(self):
+        """"Save the instance to disk"""
         try:
             # TODO: Do hash checking here
             serialized_obj = pickle.dumps(self)
@@ -31,6 +69,7 @@ class Manager:
 
     @classmethod
     def load_manager(cls, project_db: Path):
+        """Load a potential project into memory"""
         try:
             with project_db.open("rb") as handle:
                 # TODO: Add has checking here
@@ -76,8 +115,5 @@ class Manager:
             with git_ignore.open("rt", encoding="UTF-8") as handle:
                 handle.write(Manager.MANAGER_DB + "\n")
 
-
-
-
-
-
+    def _make_cmake_file(self) -> None:
+        pass

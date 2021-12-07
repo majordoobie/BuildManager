@@ -60,4 +60,14 @@ def parse_args() -> Namespace:
         type=str
     )
 
+    parser.add_argument(
+        "--cmake_version",
+        help="Specify the CMake version. By default this is set to 3.20 as the"
+             "highest version supported by CLion",
+        dest="cmake_version",
+        metavar="",
+        type=str,
+        default="3.20"
+    )
+
     return parser.parse_args()
